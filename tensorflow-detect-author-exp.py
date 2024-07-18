@@ -18,7 +18,7 @@ get_ipython().system('pip install nltk')
 nltk.download('stopwords')
 
 
-# In[ ]:
+# In[1]:
 
 
 import tensorflow as tf
@@ -44,13 +44,7 @@ import os
 from nltk.corpus import stopwords
 
 
-# In[ ]:
-
-
-os.getcwd()
-
-
-# In[ ]:
+# In[2]:
 
 
 folderpath = "sources"
@@ -61,10 +55,9 @@ for name in os.listdir(folderpath):
     if name.endswith('txt'):
         filenames.append(name)
         
-filenames
 
 
-# In[ ]:
+# In[3]:
 
 
 # Get and Process Data 
@@ -98,7 +91,7 @@ for fname in filenames:
 #df.to_csv('Text_Author.csv', index=False)
 
 
-# In[ ]:
+# In[4]:
 
 
 # Start building Model
@@ -106,49 +99,17 @@ for fname in filenames:
 train_texts, test_texts, train_labels, test_labels = train_test_split(df['Text'], df['Author'], test_size=0.2, random_state=42)
 
 
-# In[ ]:
-
-
-print(train_texts.size)
-print(test_texts.size)
-print(train_labels.size)
-print(test_labels.size)
-
-
-# In[ ]:
-
-
-train_texts[0:10]
-
-
-# In[ ]:
-
-
-train_labels[0:10]
-
-
-# In[ ]:
+# In[5]:
 
 
 # Tokenize and vectorize text data
-
-#vectorizer = CountVectorizer(ngram_range=(2,3))
 
 vectorizer = CountVectorizer()
 x_train = vectorizer.fit_transform(train_texts)
 x_test = vectorizer.transform(test_texts)
 
 
-x_train
-
-
-# In[ ]:
-
-
-len(vectorizer.vocabulary_)
-
-
-# In[ ]:
+# In[6]:
 
 
 # Encode the labels
@@ -157,14 +118,27 @@ label_encoder = LabelEncoder()
 y_train = label_encoder.fit_transform(train_labels)
 y_test = label_encoder.transform(test_labels)
 
-#print(label_encoder)
-y_train
+
+# In[7]:
 
 
-# In[ ]:
+x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.2, random_state=42)
 
 
-# Let's Build the model
+# In[8]:
+
+
+# Convert sparse matrices
+
+x_train_sparse = tf.convert_to_tensor(csr_matrix(x_train).todense(), dtype=tf.float32)
+x_val_sparse = tf.convert_to_tensor(csr_matrix(x_val).todense(), dtype=tf.float32)
+x_test_sparse = tf.convert_to_tensor(csr_matrix(x_test).todense(), dtype=tf.float32)
+
+
+# In[9]:
+
+
+# Build the model
 
 model = models.Sequential([
     layers.Dense(64, activation='relu', input_shape=(x_train.shape[1],)),
@@ -175,51 +149,7 @@ model = models.Sequential([
 model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
 
-# In[ ]:
-
-
-print(x_train.shape)
-print(x_test.shape)
-print(y_train.shape)
-print(y_test.shape)
-
-
-# In[ ]:
-
-
-x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.2, random_state=42)
-
-
-# In[ ]:
-
-
-print(x_train.shape)
-print(x_test.shape)
-print(y_train.shape)
-print(y_test.shape)
-print(x_val.shape)
-print(y_val.shape)
-
-
-# In[ ]:
-
-
-# Convert sparse matrices
-
-x_train_sparse = tf.convert_to_tensor(csr_matrix(x_train).todense(), dtype=tf.float32)
-x_val_sparse = tf.convert_to_tensor(csr_matrix(x_val).todense(), dtype=tf.float32)
-x_test_sparse = tf.convert_to_tensor(csr_matrix(x_test).todense(), dtype=tf.float32)
-
-
-# In[ ]:
-
-
-print(x_train_sparse.shape)
-print(x_val_sparse.shape)
-print(x_test_sparse.shape)
-
-
-# In[ ]:
+# In[10]:
 
 
 # Train the Model
@@ -227,13 +157,7 @@ print(x_test_sparse.shape)
 history = model.fit(x_train_sparse, y_train, epochs=10, batch_size=32, validation_data=(x_val_sparse, y_val))
 
 
-# In[ ]:
-
-
-print(history)
-
-
-# In[ ]:
+# In[11]:
 
 
 # Evaluate the model
@@ -244,24 +168,20 @@ accuracy = accuracy_score(y_test, y_pred)
 print(f'Test Accuracy: {accuracy * 100:.2f}%')
 
 
-# In[ ]:
+# In[12]:
 
 
-#model.save('tensorflow_detection_model.keras')
+# Save the model
 
-keras.saving.save_model(model, 'tensorflow_detection_model.keras', overwrite=True)
-
-
-# In[ ]:
+model.save('tensorflow_detection_model.keras')
 
 
-label_encoder.classes_
+# In[13]:
 
 
-# In[ ]:
+# Test the model
 
-
-test_text = 'into the past'
+test_text = 'ceaselessly into the past'
 
 print(test_text)
 
