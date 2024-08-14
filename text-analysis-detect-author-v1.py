@@ -253,9 +253,7 @@ len(tokenizer.word_index)
 model = models.Sequential([
     layers.Embedding(len(tokenizer.word_index) + 1, 64, input_shape=[len(tokenizer.word_index), ]),
     #layers.Bidirectional(layers.LSTM(64)),
-    layers.Bidirectional(layers.GRU(64)),
-    layers.Dense(32, activation='relu'),
-    layers.Lambda(lambda x: tf.reduce_mean(x, axis=1)),
+    layers.Bidirectional(layers.GRU(256)),
     layers.Dense(len(label_encoder.classes_), activation='softmax'),
 ])
 
