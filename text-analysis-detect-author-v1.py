@@ -230,18 +230,6 @@ print(X_train[1])
 # In[ ]:
 
 
-model.add(layers.Dense(64, activation='relu', input_shape=(X_train.shape[1],)))
-model.add(layers.Dropout(0.2))
-model.add(layers.Dense(32, activation='relu'))
-model.add(layers.Dense(len(label_encoder.classes_), activation='softmax'))
-
-layers.GRU(32),
-layers.Dense(len(label_encoder.classes_), activation='softmax')
-
-
-# In[ ]:
-
-
 len(tokenizer.word_index)
 
 
