@@ -1,5 +1,5 @@
-Machine Learning Project
-Natural Language Processing 
-Use Text-Vectorization to Analyze Classic Novels
-Predict the Author of a Phrase
+Machine Learning Project<br />
+Natural Language Processing <br />
+Use Text-Vectorization to Analyze Classic Novels<br />
+Predict the Author of a Phrase<br />
 
